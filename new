@@ -1,0 +1,90 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Deploying VPC from 
+
+Metadata:
+  template metadata
+
+Parameters:
+  MyCIDRforVPC:
+    Type: String
+    Default: 172.17.0.0/16
+    Description: Enter the CIDR fir your VPC
+
+  MyCIDRforSubnet:
+    Type: String
+    Default: 172.17.1.0/24
+    Description: Enter the CIDR for your Subnet    
+
+  AMI:
+    Type: String
+    Default: ami-0233c2d874b811deb
+    Description: Enter the AMI for your EC2 Instance (by Default, it'll choose amzn2-ami)
+
+  myAvailabilityZone:
+    Type: String
+    Default: us-east-2a
+    AllowedValues:
+      - us-east-2a
+      - us-east-2b
+      - us-east-2c
+    Description: Enter the Availability Zone you wish to choose
+
+  myInstanceTypeForEC2:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - m1.small
+      - m1.large
+    Description: Enter the Instance Type for your EC2 Instance
+
+Rules:
+  set of rules
+
+Mappings:
+  set of mappings
+
+Conditions:
+  set of conditions
+
+Transform:
+  set of transforms
+
+Resources:
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref MyCIDRforVPC
+      EnableDnsHostNames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Team
+          Value: Production
+
+  myInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Team
+          Value: production
+
+  myVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref myInternetGateway 
+      VpcId: !Ref myVPC
+
+
+  myFirstOSbyCF
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AMI
+      InstanceType: !Ref myInstanceTypeForEC2
+      AvailabilityZone: !Ref myAvailabilityZone
+
+Outputs:
+  set of outputs
